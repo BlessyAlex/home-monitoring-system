@@ -1,0 +1,62 @@
+HTML:
+
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Weather Finder</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.css" rel="stylesheet" type="text/css">
+<link href="css/main.css" rel="stylesheet" type="text/css" media="screen">
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/vue@2.3.4"></script>
+
+</head>
+<body>
+    <div id="app" class="container">
+    	<div class="back_image">
+    	<days-list the-title="Weather Forecast" v-bind:days="forecastDays"></days-list>
+</div>
+    </div>
+<script src="js/main.js"></script>	
+</body>
+</html>
+
+
+
+
+
+
+JS:
+
+Vue.component('days-list',{
+  template: `<div><h1>{{theTitle}}</h1>
+  <ul>
+    <li v-for="day in days">
+    
+      <p>Weather Desc: {{day.weather.description}}</p>
+      <p>Date: {{day.datetime}}</p>
+      <p>Temperature: {{day.temp}}</p>
+      <p>Wind Speed : {{day.wind_spd}}</p>
+      <p>Snow: {{day.snow}}</p>
+    
+    </li>
+  </ul>
+  </div>`,
+  props: ['theTitle', 'days']
+});
+
+var vm = new Vue({
+  
+   el: "#app",
+   data: {
+   	   forecastDays: []  
+     },
+    created: function(){
+      axios.get('https://api.weatherbit.io/v2.0/current?city=London,Ontario,NC&key=7f06f248141a4e7a85201f47f0b6bf05')
+      .then(function(response){  
+        console.table(response);
+        vm.forecastDays = response.data.data
+      });
+    }
+ 
+});
